@@ -1,7 +1,7 @@
 {
     "providers": {
         "aws": {
-            "enabled": false,
+            "enabled": true,
             "region": "us-west-2",
             "bucket": "unsc-os-storage"
         },

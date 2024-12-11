@@ -1,0 +1,72 @@
+{
+    "version": "1.7.0",
+    "release_date": "2024-12-11",
+    "changes": {
+        "features": [
+            {
+                "title": "Simplified AI Assistant",
+                "description": "Streamlined AI system with improved reliability",
+                "details": [
+                    "Rule-based command processing system",
+                    "Enhanced system analysis using psutil",
+                    "Improved error handling and robustness",
+                    "Reduced resource consumption",
+                    "Better system monitoring capabilities"
+                ]
+            },
+            {
+                "title": "Docker-Focused Virtualization",
+                "description": "Optimized container management system",
+                "details": [
+                    "Streamlined Docker integration",
+                    "Enhanced container monitoring",
+                    "Improved container stats collection",
+                    "Better error handling for Docker operations",
+                    "Simplified container management interface"
+                ]
+            }
+        ],
+        "improvements": [
+            "Optimized GUI performance with proper plot initialization",
+            "Enhanced system resource monitoring graphs",
+            "Improved error handling across all components",
+            "Streamlined dependency management",
+            "Better Docker service integration",
+            "More efficient resource usage monitoring"
+        ],
+        "fixes": [
+            "Fixed matplotlib plotting issues in GUI",
+            "Resolved Docker client initialization errors",
+            "Fixed system health monitoring graphs",
+            "Corrected empty plot initialization issues",
+            "Addressed Docker service detection problems"
+        ],
+        "security": [
+            "Optional security features for flexible deployment",
+            "Improved error handling for security operations",
+            "Enhanced Docker security configurations"
+        ],
+        "removed": [
+            "Removed heavy ML dependencies (TensorFlow, PyTorch)",
+            "Removed Kubernetes-related code",
+            "Cleaned up unused AI model components"
+        ],
+        "notes": [
+            "Docker Desktop must be run as administrator for virtualization features",
+            "Some security features are now optional for flexible installation",
+            "System requires Python 3.11 or higher"
+        ]
+    },
+    "minimum_requirements": {
+        "os": "Windows 10 or higher",
+        "python": "3.11",
+        "memory": "4GB",
+        "storage": "10GB"
+    },
+    "optional_features": {
+        "security": {
+            "required_packages": ["python-nmap"],
+            "description": "Enhanced security scanning and monitoring"
+        }
+    }
+}

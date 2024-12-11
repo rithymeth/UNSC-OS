@@ -189,6 +189,8 @@ class UNSCGUI:
         self.cpu_plot.set_title('CPU Usage (%)')
         self.cpu_plot.set_ylim(0, 100)
         self.cpu_plot.grid(True, alpha=0.3)
+        # Initialize with zero data
+        self.cpu_line, = self.cpu_plot.plot(range(60), [0] * 60, 'b-')
         self.cpu_canvas = FigureCanvasTkAgg(self.cpu_figure, graphs_frame)
         self.cpu_canvas.get_tk_widget().pack(expand=True, fill='both')
         
@@ -198,21 +200,22 @@ class UNSCGUI:
         self.mem_plot.set_title('Memory Usage (%)')
         self.mem_plot.set_ylim(0, 100)
         self.mem_plot.grid(True, alpha=0.3)
+        # Initialize with zero data
+        self.mem_line, = self.mem_plot.plot(range(60), [0] * 60, 'g-')
         self.mem_canvas = FigureCanvasTkAgg(self.mem_figure, graphs_frame)
         self.mem_canvas.get_tk_widget().pack(expand=True, fill='both')
         
         # Create network graph
         self.net_figure = Figure(figsize=(6, 2))
         self.net_plot = self.net_figure.add_subplot(111)
-        self.net_plot.set_title('Network Usage (KB/s)')
+        self.net_plot.set_title('Network Traffic (KB/s)')
         self.net_plot.grid(True, alpha=0.3)
+        # Initialize with zero data
+        self.net_recv_line, = self.net_plot.plot(range(60), [0] * 60, 'b-', label='Received')
+        self.net_sent_line, = self.net_plot.plot(range(60), [0] * 60, 'r-', label='Sent')
+        self.net_plot.legend()
         self.net_canvas = FigureCanvasTkAgg(self.net_figure, graphs_frame)
         self.net_canvas.get_tk_widget().pack(expand=True, fill='both')
-        
-        # Initialize plots with empty data
-        self._update_cpu_plot()
-        self._update_mem_plot()
-        self._update_net_plot()
 
     def setup_settings_tab(self):
         """Setup settings tab"""
@@ -385,49 +388,40 @@ with theme management and system monitoring.
             time.sleep(1)
 
     def update_plots(self):
-        """Update system monitoring plots"""
+        """Update all monitoring plots"""
         try:
-            if not hasattr(self, 'cpu_plot') or not hasattr(self, 'mem_plot') or not hasattr(self, 'net_plot'):
-                return
-                
             self._update_cpu_plot()
             self._update_mem_plot()
             self._update_net_plot()
-            
         except Exception as e:
             logging.error(f"Error updating plots: {e}")
 
     def _update_cpu_plot(self):
         """Update CPU plot"""
-        if len(self.cpu_data) > 0:
-            self.cpu_plot.clear()
-            self.cpu_plot.plot(range(len(self.cpu_data)), self.cpu_data)
-            self.cpu_plot.set_title('CPU Usage (%)')
-            self.cpu_plot.set_ylim(0, 100)
-            self.cpu_plot.grid(True, alpha=0.3)
-            self.cpu_canvas.draw_idle()
-    
+        try:
+            self.cpu_line.set_ydata(self.cpu_data)
+            self.cpu_canvas.draw()
+        except Exception as e:
+            logging.error(f"Error updating CPU plot: {e}")
+
     def _update_mem_plot(self):
         """Update memory plot"""
-        if len(self.mem_data) > 0:
-            self.mem_plot.clear()
-            self.mem_plot.plot(range(len(self.mem_data)), self.mem_data)
-            self.mem_plot.set_title('Memory Usage (%)')
-            self.mem_plot.set_ylim(0, 100)
-            self.mem_plot.grid(True, alpha=0.3)
-            self.mem_canvas.draw_idle()
-    
+        try:
+            self.mem_line.set_ydata(self.mem_data)
+            self.mem_canvas.draw()
+        except Exception as e:
+            logging.error(f"Error updating memory plot: {e}")
+
     def _update_net_plot(self):
         """Update network plot"""
-        if len(self.net_data['sent']) > 0 and len(self.net_data['recv']) > 0:
-            self.net_plot.clear()
-            x_range = range(len(self.net_data['sent']))
-            self.net_plot.plot(x_range, self.net_data['sent'], label='Sent')
-            self.net_plot.plot(x_range, self.net_data['recv'], label='Received')
-            self.net_plot.set_title('Network Usage (KB/s)')
-            self.net_plot.grid(True, alpha=0.3)
-            self.net_plot.legend()
-            self.net_canvas.draw_idle()
+        try:
+            self.net_recv_line.set_ydata(self.net_data['recv'])
+            self.net_sent_line.set_ydata(self.net_data['sent'])
+            self.net_plot.relim()
+            self.net_plot.autoscale_view()
+            self.net_canvas.draw()
+        except Exception as e:
+            logging.error(f"Error updating network plot: {e}")
 
     def handle_input(self, event):
         """Handle terminal input"""

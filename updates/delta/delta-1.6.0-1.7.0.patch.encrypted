@@ -1,0 +1,14 @@
+{
+    "header": {
+        "encryption_version": "2.0",
+        "encryption_method": "AES-256-GCM",
+        "signature": "encrypted_signature_placeholder",
+        "timestamp": "2024-12-11T15:50:00+07:00"
+    },
+    "encrypted_content": "encrypted_content_placeholder",
+    "verification": {
+        "hash_algorithm": "SHA-256",
+        "hash": "hash_placeholder",
+        "signature_algorithm": "RSA-PSS-4096"
+    }
+}

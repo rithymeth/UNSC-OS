@@ -1,0 +1,44 @@
+{
+    "source_version": "1.6.0",
+    "target_version": "1.7.0",
+    "patch_date": "2024-12-11",
+    "files_modified": {
+        "ai_assistant.py": {
+            "changes": [
+                "Removed TensorFlow and PyTorch dependencies",
+                "Implemented rule-based command processing",
+                "Added psutil-based system analysis",
+                "Enhanced error handling"
+            ],
+            "checksum": "updated_checksum_value"
+        },
+        "virtualization_manager.py": {
+            "changes": [
+                "Removed Kubernetes code",
+                "Improved Docker client initialization",
+                "Enhanced container monitoring",
+                "Added better error handling"
+            ],
+            "checksum": "updated_checksum_value"
+        },
+        "gui.py": {
+            "changes": [
+                "Fixed matplotlib plot initialization",
+                "Added proper error handling for plots",
+                "Improved system health monitoring"
+            ],
+            "checksum": "updated_checksum_value"
+        },
+        "requirements.txt": {
+            "changes": [
+                "Made AI dependencies optional",
+                "Removed Kubernetes dependencies",
+                "Updated core dependencies"
+            ],
+            "checksum": "updated_checksum_value"
+        }
+    },
+    "backup_required": true,
+    "requires_restart": true,
+    "rollback_supported": true
+}
