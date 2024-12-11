@@ -13,16 +13,25 @@ from datetime import datetime
 from typing import List, Dict, Optional
 from pathlib import Path
 from gui import UNSCGUI
+from cloud_manager import CloudManager
+from virtualization_manager import VirtualizationManager
+from security_manager import SecurityManager
 
 class UNSCOS:
     def __init__(self):
+        self.version = "1.6.0"
         self.current_dir = os.getcwd()
         self.running = True
         self.current_user = getpass.getuser()
         self.scheduler_thread = None
         self.gui = None
+        self.cloud = None
+        self.virtualization = None
+        self.ai_assistant = None
+        self.security = None
         self.setup_logging()
         self.commands = {
+            # Basic commands
             'help': self.help,
             'ls': self.list_directory,
             'cd': self.change_directory,
@@ -33,21 +42,56 @@ class UNSCOS:
             'cat': self.view_file,
             'ps': self.list_processes,
             'kill': self.kill_process,
+            
+            # System information
             'sysinfo': self.system_info,
             'meminfo': self.memory_info,
             'netinfo': self.network_info,
             'diskinfo': self.disk_info,
+            
+            # Task management
             'schedule': self.schedule_task,
             'tasks': self.list_tasks,
+            
+            # Package management
             'pkg': self.package_manager,
+            
+            # User management
             'whoami': self.user_info,
             'users': self.list_users,
+            
+            # File operations
             'find': self.find_files,
             'backup': self.backup_system,
             'restore': self.restore_system,
+            
+            # Service management
             'service': self.manage_service,
             'services': self.list_services,
+            
+            # GUI
             'gui': self.start_gui,
+            
+            # Cloud features (v1.6)
+            'cloud': self.cloud_manager,
+            'cloudsync': self.cloud_sync,
+            'cloudstatus': self.cloud_status,
+            
+            # Virtualization features (v1.6)
+            'vm': self.vm_manager,
+            'container': self.container_manager,
+            'docker': self.docker_manager,
+            
+            # AI features (v1.5)
+            'ai': self.ai_command,
+            'learn': self.ai_learn,
+            'analyze': self.ai_analyze,
+            
+            # Security features (v1.5)
+            'secure': self.security_manager,
+            'scan': self.security_scan,
+            'firewall': self.firewall_manager,
+            
             'exit': self.shutdown
         }
         self.scheduled_tasks = {}
@@ -75,7 +119,7 @@ class UNSCOS:
     def startup(self):
         """Initialize the OS"""
         print("\n" + "=" * 50)
-        print("Welcome to UNSC OS")
+        print(f"Welcome to UNSC OS v{self.version}")
         print(f"System initialized at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"Current user: {self.current_user}")
         print(f"Hostname: {socket.gethostname()}")
@@ -83,6 +127,27 @@ class UNSCOS:
         print(f"System: {platform.system()} {platform.release()}")
         print("Type 'help' for available commands")
         print("=" * 50 + "\n")
+        
+        # Initialize core components
+        try:
+            self.cloud = CloudManager()
+            self.logger.info("Cloud manager initialized successfully")
+        except Exception as e:
+            self.logger.error(f"Failed to initialize cloud manager: {e}")
+            
+        try:
+            self.virtualization = VirtualizationManager()
+            self.logger.info("Virtualization manager initialized successfully")
+        except Exception as e:
+            self.logger.error(f"Failed to initialize virtualization manager: {e}")
+            
+        try:
+            from security_manager import SecurityManager
+            self.security = SecurityManager()
+            self.logger.info("Security manager initialized successfully")
+        except Exception as e:
+            self.logger.warning("Security features are not available: {e}")
+            self.security = None
 
     def start_scheduler(self):
         """Start the task scheduler thread"""
@@ -592,6 +657,263 @@ class UNSCOS:
         else:
             print(f"Unknown command: '{cmd}'")
             print("Type 'help' for available commands")
+
+    def cloud_manager(self, args: List[str]) -> None:
+        """Manage cloud storage settings and providers
+        Usage: cloud [action] [provider] [options]
+        Actions: enable, disable, config
+        Example: cloud enable aws"""
+        if not args:
+            print("Error: Required format: cloud [action] [provider] [options]")
+            return
+
+        if not self.cloud:
+            print("Error: Cloud manager is not initialized")
+            return
+
+        action = args[0]
+        if action == "enable" and len(args) >= 2:
+            provider = args[1]
+            if provider in self.cloud.config["providers"]:
+                self.cloud.config["providers"][provider]["enabled"] = True
+                self.cloud.save_config()
+                print(f"{provider.upper()} cloud storage enabled")
+            else:
+                print(f"Unknown provider: {provider}")
+        
+        elif action == "disable" and len(args) >= 2:
+            provider = args[1]
+            if provider in self.cloud.config["providers"]:
+                self.cloud.config["providers"][provider]["enabled"] = False
+                self.cloud.save_config()
+                print(f"{provider.upper()} cloud storage disabled")
+            else:
+                print(f"Unknown provider: {provider}")
+        
+        elif action == "config":
+            print("\nCloud Configuration:")
+            for provider, settings in self.cloud.config["providers"].items():
+                print(f"\n{provider.upper()}:")
+                for key, value in settings.items():
+                    print(f"  {key}: {value}")
+            print("\nSync Settings:")
+            for key, value in self.cloud.config["sync"].items():
+                print(f"  {key}: {value}")
+        
+        else:
+            print("Unknown action. Available actions: enable, disable, config")
+
+    def cloud_sync(self, args: List[str]) -> None:
+        """Manually trigger cloud synchronization
+        Usage: cloudsync [force]"""
+        if not self.cloud:
+            print("Error: Cloud manager is not initialized")
+            return
+
+        try:
+            print("Starting cloud synchronization...")
+            if args and args[0] == "force":
+                self.cloud.sync_all()
+            else:
+                self.cloud.sync_queue.put({"action": "sync", "path": None, "provider": None})
+            print("Synchronization task started")
+        except Exception as e:
+            print(f"Error during synchronization: {e}")
+
+    def cloud_status(self, args: List[str]) -> None:
+        """Show cloud storage status and usage
+        Usage: cloudstatus"""
+        if not self.cloud:
+            print("Error: Cloud manager is not initialized")
+            return
+
+        try:
+            usage = self.cloud.get_storage_usage()
+            print("\nCloud Storage Status:")
+            for provider, stats in usage.items():
+                if self.cloud.config["providers"][provider]["enabled"]:
+                    print(f"\n{provider.upper()}:")
+                    print(f"  Files: {stats['files']}")
+                    print(f"  Total Size: {stats['size'] / (1024**2):.2f} MB")
+        except Exception as e:
+            print(f"Error getting cloud status: {e}")
+
+    def vm_manager(self, args: List[str]) -> None:
+        """Manage virtual machines
+        Usage: vm [action] [name] [options]
+        Actions: create, start, stop, delete, list"""
+        if not self.virtualization:
+            print("Error: Virtualization manager is not initialized")
+            return
+            
+        if not args:
+            print("Error: Required format: vm [action] [name] [options]")
+            return
+            
+        try:
+            result = self.virtualization.manage_vm(args)
+            print(result)
+        except Exception as e:
+            print(f"Error managing VM: {e}")
+
+    def container_manager(self, args: List[str]) -> None:
+        """Manage containers
+        Usage: container [action] [name] [options]
+        Actions: create, start, stop, delete, list"""
+        if not self.virtualization:
+            print("Error: Virtualization manager is not initialized")
+            return
+            
+        if not args:
+            print("Error: Required format: container [action] [name] [options]")
+            return
+            
+        try:
+            result = self.virtualization.manage_container(args)
+            print(result)
+        except Exception as e:
+            print(f"Error managing container: {e}")
+
+    def docker_manager(self, args: List[str]) -> None:
+        """Manage Docker containers and images
+        Usage: docker [action] [name] [options]
+        Actions: pull, run, stop, rm, ps, images"""
+        if not self.virtualization:
+            print("Error: Virtualization manager is not initialized")
+            return
+            
+        if not args:
+            print("Error: Required format: docker [action] [name] [options]")
+            return
+            
+        try:
+            result = self.virtualization.manage_docker(args)
+            print(result)
+        except Exception as e:
+            print(f"Error managing Docker: {e}")
+
+    def ai_command(self, args: List[str]) -> None:
+        """Execute AI assistant commands
+        Usage: ai [command] [options]"""
+        try:
+            from ai_assistant import AIAssistant
+            if self.ai_assistant is None:
+                self.ai_assistant = AIAssistant()
+        except Exception as e:
+            print(f"Error: AI features are not available: {e}")
+            return
+            
+        if not args:
+            print("Error: Required format: ai [command] [options]")
+            return
+            
+        try:
+            result = self.ai_assistant.process_command(args)
+            print(result)
+        except Exception as e:
+            print(f"Error processing AI command: {e}")
+
+    def ai_learn(self, args: List[str]) -> None:
+        """Train AI assistant on new data
+        Usage: learn [data_source]"""
+        try:
+            from ai_assistant import AIAssistant
+            if self.ai_assistant is None:
+                self.ai_assistant = AIAssistant()
+        except Exception as e:
+            print(f"Error: AI features are not available: {e}")
+            return
+            
+        if not args:
+            print("Error: Required format: learn [data_source]")
+            return
+            
+        try:
+            result = self.ai_assistant.learn(args[0])
+            print(result)
+        except Exception as e:
+            print(f"Error training AI: {e}")
+
+    def ai_analyze(self, args: List[str]) -> None:
+        """Analyze system state with AI
+        Usage: analyze [component]"""
+        try:
+            from ai_assistant import AIAssistant
+            if self.ai_assistant is None:
+                self.ai_assistant = AIAssistant()
+        except Exception as e:
+            print(f"Error: AI features are not available: {e}")
+            return
+            
+        if not args:
+            print("Error: Required format: analyze [component]")
+            return
+            
+        try:
+            result = self.ai_assistant.analyze_system(args[0])
+            print(result)
+        except Exception as e:
+            print(f"Error analyzing system: {e}")
+
+    def security_manager(self, args: List[str]) -> None:
+        """Manage security settings
+        Usage: secure [action] [options]
+        Actions: status, config, update"""
+        if not self.security:
+            print("Error: Security manager is not initialized")
+            return
+            
+        if not args:
+            print("Error: Required format: secure [action] [options]")
+            return
+            
+        try:
+            result = self.security.manage_security(args)
+            print(result)
+        except Exception as e:
+            print(f"Error managing security: {e}")
+
+    def security_scan(self, args: List[str]) -> None:
+        """Run security scan
+        Usage: scan [target]"""
+        try:
+            from security_manager import SecurityManager
+            if self.security is None:
+                self.security = SecurityManager()
+        except Exception as e:
+            print(f"Error: Security features are not available: {e}")
+            return
+            
+        if not args:
+            print("Error: Required format: scan [target]")
+            return
+            
+        try:
+            result = self.security.scan_network(args[0])
+            print(result)
+        except Exception as e:
+            print(f"Error scanning network: {e}")
+
+    def firewall_manager(self, args: List[str]) -> None:
+        """Manage firewall rules
+        Usage: firewall [action] [rule]"""
+        try:
+            from security_manager import SecurityManager
+            if self.security is None:
+                self.security = SecurityManager()
+        except Exception as e:
+            print(f"Error: Security features are not available: {e}")
+            return
+            
+        if not args:
+            print("Error: Required format: firewall [action] [rule]")
+            return
+            
+        try:
+            result = self.security.manage_firewall(args)
+            print(result)
+        except Exception as e:
+            print(f"Error managing firewall: {e}")
 
     def run(self):
         """Main OS loop"""
