@@ -1,6 +1,5 @@
-# Core dependencies (v1.7)
+# Core dependencies (v1.8)
 psutil>=5.9.0
-matplotlib>=3.7.0
 numpy>=1.24.0
 requests>=2.31.0
 schedule>=1.2.0
@@ -25,8 +24,6 @@ docker>=7.0.0
 # scikit-learn>=1.3.0
 
 ## Security Features (v1.5) - Optional
-# py7zr>=0.20.6
-# watchdog>=3.0.0
 python-nmap>=0.7.1
 # scapy>=2.5.0
 

@@ -1,0 +1,76 @@
+{
+    "version": "1.7.1",
+    "release_date": "2024-12-11",
+    "changes": {
+        "features": [
+            {
+                "title": "UNSC-Inspired Interface",
+                "description": "Complete UI overhaul with UNSC aesthetic",
+                "details": [
+                    "Holographic-style interface elements",
+                    "UNSC color scheme and typography",
+                    "Military-grade UI components",
+                    "Dynamic status indicators",
+                    "Tactical information display"
+                ]
+            },
+            {
+                "title": "Enhanced Visual Effects",
+                "description": "Modern visual improvements",
+                "details": [
+                    "Blur effects for windows and panels",
+                    "Holographic hover effects",
+                    "Dynamic glow animations",
+                    "Status change animations",
+                    "Smooth transitions"
+                ]
+            },
+            {
+                "title": "Audio Integration",
+                "description": "UNSC-themed audio feedback",
+                "details": [
+                    "Interface interaction sounds",
+                    "Status change notifications",
+                    "Alert system sounds",
+                    "Ambient background effects",
+                    "Voice notifications"
+                ]
+            }
+        ],
+        "improvements": [
+            "Modernized UI framework with CustomTkinter",
+            "Enhanced window management with blur effects",
+            "Improved visual feedback for system status",
+            "Better accessibility with high contrast options",
+            "Optimized UI performance and responsiveness",
+            "Enhanced theme engine with animation support"
+        ],
+        "styles": {
+            "themes": [
+                "New UNSC theme with military aesthetic",
+                "Updated dark theme with UNSC colors",
+                "High contrast mode for tactical displays"
+            ],
+            "fonts": [
+                "Rajdhani for main text",
+                "Orbitron for display elements",
+                "Share Tech Mono for code and data"
+            ]
+        }
+    },
+    "minimum_requirements": {
+        "os": "Windows 10 or higher",
+        "python": "3.11",
+        "memory": "4GB",
+        "storage": "10GB",
+        "graphics": "DirectX 11 compatible"
+    },
+    "dependencies": {
+        "new": [
+            "customtkinter>=5.2.0",
+            "pillow>=10.0.0",
+            "pygame>=2.5.0",
+            "blurwindow>=1.2.1"
+        ]
+    }
+}

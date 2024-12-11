@@ -1,0 +1,52 @@
+{
+    "version": "1.8.0",
+    "release_date": "2024-12-11",
+    "changes": {
+        "removed": [
+            {
+                "title": "GUI Removal",
+                "description": "Transition to pure command-line interface",
+                "details": [
+                    "Removed graphical user interface",
+                    "Removed theme system",
+                    "Removed GUI-related dependencies",
+                    "Removed plotting capabilities",
+                    "Removed window management"
+                ]
+            }
+        ],
+        "improvements": [
+            "Streamlined command-line interface",
+            "Reduced system resource usage",
+            "Improved performance",
+            "Simplified installation process",
+            "Reduced dependency footprint",
+            "Enhanced terminal output formatting"
+        ],
+        "files_removed": [
+            "gui.py",
+            "theme_manager.py",
+            "themes/*",
+            "system_health.py"
+        ],
+        "dependencies_removed": [
+            "matplotlib",
+            "customtkinter",
+            "pillow",
+            "pygame",
+            "blurwindow"
+        ]
+    },
+    "minimum_requirements": {
+        "os": "Windows 10 or higher",
+        "python": "3.11",
+        "memory": "2GB",
+        "storage": "5GB"
+    },
+    "notes": [
+        "This update removes the graphical interface in favor of a more efficient command-line interface",
+        "System monitoring and management now done through CLI commands",
+        "Reduced system requirements due to removal of GUI components",
+        "All functionality remains available through command-line interface"
+    ]
+}
