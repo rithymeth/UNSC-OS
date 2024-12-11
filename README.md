@@ -20,17 +20,19 @@ A powerful operating system implementation in Python with advanced features incl
 - Automated backup and restore
 - Cloud-based authentication
 
-### Virtualization Platform (v1.6)
+### Virtualization Platform (v1.7)
 - Docker container management
-- Virtual machine orchestration
-- Container networking
+- Container monitoring and stats
 - Resource allocation
+- Container lifecycle management
+- Error handling and recovery
 
-### AI Assistant (v1.5)
-- Natural language command processing
-- Predictive maintenance
-- System optimization suggestions
-- Automated task scheduling
+### AI Assistant (v1.7)
+- Rule-based command processing
+- System analysis and monitoring
+- Automated troubleshooting
+- Resource optimization
+- Error handling and recovery
 
 ### Security Suite (v1.5)
 - Real-time threat detection
@@ -39,8 +41,10 @@ A powerful operating system implementation in Python with advanced features incl
 - Security policy enforcement
 
 ## Requirements
-- Python 3.11+
-- Docker Desktop (for virtualization features)
+- Windows 10 or higher
+- Python 3.11 or higher
+- 4GB RAM minimum
+- 10GB available storage
 - See requirements.txt for complete list
 
 ## Installation
