@@ -8,6 +8,12 @@ from datetime import datetime
 import logging
 from typing import Dict, List, Optional
 from package_manager import PackageManager
+from update_scheduler import UpdateScheduler
+import bsdiff4  # For delta updates
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import base64
 
 class UpdateManager:
     def __init__(self, current_version: str = "1.0.0"):
@@ -16,6 +22,7 @@ class UpdateManager:
         self.update_check_interval = 86400  # Check once per day
         self.updates_dir = "updates"
         self.backup_dir = "backups"
+        self.delta_dir = os.path.join(self.updates_dir, "delta")
         self.setup_logging()
         self.setup_directories()
         self._running = False
@@ -24,8 +31,27 @@ class UpdateManager:
         self._last_check_time = 0
         self._check_cooldown = 300  # 5 minutes cooldown
         
-        # Initialize package manager
+        # Initialize managers
         self.package_manager = PackageManager(os.path.dirname(os.path.abspath(__file__)))
+        self.scheduler = UpdateScheduler(self)
+        
+        # Initialize security
+        self.setup_security()
+
+    def setup_security(self):
+        """Setup encryption and security features"""
+        # In a real implementation, this would be stored securely
+        self.update_key = b'your-secret-key-stored-securely'
+        
+        # Setup encryption key
+        kdf = PBKDF2HMAC(
+            algorithm=hashes.SHA256(),
+            length=32,
+            salt=b'static-salt',  # In production, use a proper salt
+            iterations=100000,
+        )
+        key = base64.urlsafe_b64encode(kdf.derive(self.update_key))
+        self.cipher_suite = Fernet(key)
 
     def setup_logging(self):
         """Setup logging for the update manager"""
@@ -41,7 +67,7 @@ class UpdateManager:
 
     def setup_directories(self):
         """Create necessary directories"""
-        for directory in [self.updates_dir, self.backup_dir]:
+        for directory in [self.updates_dir, self.backup_dir, self.delta_dir]:
             if not os.path.exists(directory):
                 os.makedirs(directory)
 
@@ -192,15 +218,103 @@ class UpdateManager:
         new = [int(x) for x in new_version.split('.')]
         return new > current
 
+    def encrypt_file(self, file_path: str) -> str:
+        """Encrypt a file"""
+        try:
+            with open(file_path, 'rb') as f:
+                data = f.read()
+            
+            encrypted_data = self.cipher_suite.encrypt(data)
+            encrypted_path = file_path + '.encrypted'
+            
+            with open(encrypted_path, 'wb') as f:
+                f.write(encrypted_data)
+            
+            return encrypted_path
+        except Exception as e:
+            logging.error(f"Error encrypting file: {e}")
+            return None
+
+    def decrypt_file(self, file_path: str) -> str:
+        """Decrypt a file"""
+        try:
+            with open(file_path, 'rb') as f:
+                encrypted_data = f.read()
+            
+            decrypted_data = self.cipher_suite.decrypt(encrypted_data)
+            decrypted_path = file_path.replace('.encrypted', '')
+            
+            with open(decrypted_path, 'wb') as f:
+                f.write(decrypted_data)
+            
+            return decrypted_path
+        except Exception as e:
+            logging.error(f"Error decrypting file: {e}")
+            return None
+
+    def create_delta_update(self, old_version: str, new_version: str) -> Optional[str]:
+        """Create a delta update between versions"""
+        try:
+            old_file = os.path.join(self.updates_dir, f"unsc-os-{old_version}.zip")
+            new_file = os.path.join(self.updates_dir, f"unsc-os-{new_version}.zip")
+            delta_file = os.path.join(self.delta_dir, f"delta-{old_version}-{new_version}.patch")
+
+            if not (os.path.exists(old_file) and os.path.exists(new_file)):
+                return None
+
+            with open(old_file, 'rb') as f1, open(new_file, 'rb') as f2:
+                delta = bsdiff4.diff(f1.read(), f2.read())
+
+            with open(delta_file, 'wb') as f:
+                f.write(delta)
+
+            # Encrypt the delta file
+            return self.encrypt_file(delta_file)
+        except Exception as e:
+            logging.error(f"Error creating delta update: {e}")
+            return None
+
+    def apply_delta_update(self, current_file: str, delta_file: str, output_file: str) -> bool:
+        """Apply a delta update"""
+        try:
+            # Decrypt the delta file
+            decrypted_delta = self.decrypt_file(delta_file)
+            if not decrypted_delta:
+                return False
+
+            with open(current_file, 'rb') as f1, open(decrypted_delta, 'rb') as f2:
+                old_data = f1.read()
+                delta_data = f2.read()
+                new_data = bsdiff4.patch(old_data, delta_data)
+
+            with open(output_file, 'wb') as f:
+                f.write(new_data)
+
+            os.remove(decrypted_delta)  # Clean up decrypted file
+            return True
+        except Exception as e:
+            logging.error(f"Error applying delta update: {e}")
+            return False
+
     def download_update(self, update_info: Dict) -> Optional[str]:
         """Download update package"""
         try:
-            # Simulate download
+            current_file = os.path.join(self.updates_dir, f"unsc-os-{self.current_version}.zip")
+            new_version = update_info['version']
+            delta_file = os.path.join(self.delta_dir, f"delta-{self.current_version}-{new_version}.patch.encrypted")
+
+            # Try to use delta update first
+            if os.path.exists(delta_file):
+                logging.info("Using delta update...")
+                output_file = os.path.join(self.updates_dir, f"unsc-os-{new_version}.zip")
+                if self.apply_delta_update(current_file, delta_file, output_file):
+                    return output_file
+
+            # Fall back to full update if delta update fails
+            logging.info("Downloading full update...")
             download_path = os.path.join(self.updates_dir, f"update-{update_info['version']}.zip")
-            logging.info(f"Downloading update to {download_path}")
             
-            # In a real implementation, this would actually download the file
-            # For demonstration, we'll create a dummy file
+            # In a real implementation, this would download from update_info['download_url']
             with open(download_path, 'w') as f:
                 f.write("Update package contents")
             
@@ -292,3 +406,13 @@ class UpdateManager:
         else:
             self.notify_observers("Update installation failed")
             return False
+
+    def start(self):
+        """Start update manager and scheduler"""
+        self.scheduler.start()
+        self.start_auto_update_checker()
+
+    def stop(self):
+        """Stop update manager and scheduler"""
+        self.scheduler.stop()
+        self.stop_auto_update_checker()

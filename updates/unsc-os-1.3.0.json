@@ -1,0 +1,75 @@
+{
+    "version": "1.3.0",
+    "release_date": "2024-12-11",
+    "changes": {
+        "features": [
+            {
+                "title": "Power Management",
+                "description": "Advanced power management system with customizable profiles",
+                "details": [
+                    "Built-in power profiles (Power Saver, Balanced, Performance)",
+                    "Custom profile creation and management",
+                    "Battery status monitoring",
+                    "Power consumption tracking"
+                ]
+            },
+            {
+                "title": "Network Security",
+                "description": "Enhanced network monitoring and security features",
+                "details": [
+                    "Real-time connection monitoring",
+                    "Firewall rule management",
+                    "Network usage statistics",
+                    "Connection history tracking",
+                    "Suspicious activity detection"
+                ]
+            },
+            {
+                "title": "Backup System",
+                "description": "Comprehensive backup and restore functionality",
+                "details": [
+                    "Create full system or selective file backups",
+                    "Automatic backup integrity verification",
+                    "Backup compression and encryption",
+                    "Easy restore functionality",
+                    "Backup history and management"
+                ]
+            },
+            {
+                "title": "Theme System",
+                "description": "Enhanced theme system with modern features",
+                "details": [
+                    "Smooth theme transitions and animations",
+                    "Custom theme creation and management",
+                    "Improved theme persistence",
+                    "Support for dynamic theme updates"
+                ]
+            }
+        ],
+        "improvements": [
+            "Enhanced system health monitoring with predictive analytics",
+            "Improved performance and reduced memory usage",
+            "Better error handling and logging",
+            "Added support for custom widgets and plugins"
+        ]
+    },
+    "requirements": {
+        "python": ">=3.11.9",
+        "dependencies": {
+            "psutil": ">=5.9.0",
+            "tkinter": "*",
+            "matplotlib": ">=3.7.0",
+            "cryptography": ">=41.0.0",
+            "bsdiff4": ">=1.2.0"
+        }
+    },
+    "files": [
+        "gui.py",
+        "theme_manager.py",
+        "system_health.py",
+        "updater.py",
+        "power_manager.py",
+        "network_monitor.py",
+        "backup_manager.py"
+    ]
+}

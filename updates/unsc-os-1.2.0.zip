@@ -1,0 +1,23 @@
+{
+    "version": "1.2.0",
+    "changes": [
+        "Added comprehensive theme engine with support for custom themes",
+        "Added built-in themes: Default, Dark, and High Contrast",
+        "Added Settings tab for theme management",
+        "Added ability to create, apply, and delete custom themes",
+        "Improved GUI responsiveness and visual consistency",
+        "Added theme persistence across sessions",
+        "Added support for custom fonts and styles"
+    ],
+    "files": {
+        "theme_manager.py": "NEW",
+        "gui.py": "MODIFIED",
+        "themes/default.json": "NEW",
+        "themes/dark.json": "NEW",
+        "themes/high_contrast.json": "NEW"
+    },
+    "requires_restart": true,
+    "dependencies": {
+        "tkinter": ">=8.6"
+    }
+}

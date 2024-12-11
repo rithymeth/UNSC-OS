@@ -1,0 +1,95 @@
+{
+    "version": "1.4.0",
+    "release_date": "2024-12-11",
+    "changes": {
+        "features": [
+            {
+                "title": "Enhanced Backup System",
+                "description": "Improved backup system with advanced features",
+                "details": [
+                    "Incremental backup support for faster backups",
+                    "Backup encryption with AES-256",
+                    "Backup compression optimization",
+                    "Scheduled automatic backups",
+                    "Cloud backup integration (OneDrive, Google Drive)"
+                ]
+            },
+            {
+                "title": "System Recovery",
+                "description": "New system recovery and restore points",
+                "details": [
+                    "System restore point creation",
+                    "Automatic restore points before updates",
+                    "Recovery environment with basic tools",
+                    "Safe mode boot options",
+                    "System configuration backup"
+                ]
+            },
+            {
+                "title": "Performance Optimization",
+                "description": "System-wide performance improvements",
+                "details": [
+                    "Improved memory management",
+                    "Disk space optimization",
+                    "Startup time reduction",
+                    "Background process management",
+                    "Resource usage analytics"
+                ]
+            }
+        ],
+        "improvements": [
+            "Enhanced GUI responsiveness and animations",
+            "Better error handling and user notifications",
+            "Improved theme system with transition effects",
+            "Optimized system monitoring with reduced CPU usage",
+            "Enhanced power management profiles",
+            "More detailed system health analytics",
+            "Improved network security monitoring"
+        ],
+        "fixes": [
+            "Fixed plot update issues in system monitoring",
+            "Resolved theme application inconsistencies",
+            "Fixed memory leak in background processes",
+            "Corrected network bandwidth calculation",
+            "Fixed update notification handling"
+        ]
+    },
+    "requirements": {
+        "os": "Windows 10+",
+        "python": ">=3.11.9",
+        "dependencies": {
+            "psutil": ">=5.9.0",
+            "tkinter": "*",
+            "matplotlib": ">=3.7.0",
+            "cryptography": ">=41.0.0",
+            "bsdiff4": ">=1.2.0",
+            "py7zr": ">=0.20.0",
+            "schedule": ">=1.2.0",
+            "watchdog": ">=3.0.0"
+        }
+    },
+    "security": {
+        "features": [
+            "Enhanced backup encryption",
+            "Improved network security monitoring",
+            "System integrity verification",
+            "Secure configuration storage"
+        ],
+        "fixes": [
+            "Patched potential security vulnerabilities",
+            "Enhanced data encryption",
+            "Improved secure communication"
+        ]
+    },
+    "files": [
+        "gui.py",
+        "theme_manager.py",
+        "system_health.py",
+        "updater.py",
+        "power_manager.py",
+        "network_monitor.py",
+        "backup_manager.py",
+        "recovery_manager.py",
+        "performance_optimizer.py"
+    ]
+}

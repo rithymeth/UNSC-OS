@@ -1,0 +1,16 @@
+{
+    "version": "1.1.0",
+    "changes": [
+        "Added System Health Monitor with real-time CPU, memory, disk, and network monitoring",
+        "Added system health warnings and alerts",
+        "Added performance trend analysis",
+        "Enhanced GUI with System Health tab",
+        "Improved error handling and logging"
+    ],
+    "files": {
+        "system_health.py": "NEW",
+        "gui.py": "MODIFIED",
+        "requirements.txt": "MODIFIED"
+    },
+    "requires_restart": true
+}

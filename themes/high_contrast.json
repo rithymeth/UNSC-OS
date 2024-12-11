@@ -1,0 +1,29 @@
+{
+    "name": "high_contrast",
+    "dark_mode": true,
+    "colors": {
+        "background": "#000000",
+        "text": "#ffffff",
+        "primary": "#ffff00",
+        "secondary": "#1a1a1a",
+        "accent": "#00ff00",
+        "error": "#ff0000",
+        "success": "#00ff00",
+        "warning": "#ffff00"
+    },
+    "fonts": {
+        "main": [
+            "Segoe UI",
+            10
+        ],
+        "title": [
+            "Segoe UI",
+            12,
+            "bold"
+        ],
+        "monospace": [
+            "Consolas",
+            10
+        ]
+    }
+}
