@@ -1,30 +1,47 @@
 # UNSC OS
 
-A powerful operating system implementation in Python with advanced features including GUI interface, system monitoring, task scheduling, and comprehensive system management.
+A powerful operating system implementation in Python with advanced features including cloud integration, virtualization, AI assistance, and comprehensive system management.
 
 ## Features
+### Core Features
 - Graphical User Interface
 - Command-line interface
-- File system operations
-- Process management
-- System monitoring
-- Network monitoring
-- Disk usage tracking
+- System monitoring and optimization
 - Task scheduling
 - Package management
-- User management
 - System logging
-- File search capabilities
+- File operations and search
 - Service management
 - System backup/restore
-- Memory usage tracking
-- File editing capabilities
+
+### Cloud Integration (v1.6)
+- Multi-cloud support (AWS, Azure, GCP)
+- Cloud storage synchronization
+- Automated backup and restore
+- Cloud-based authentication
+
+### Virtualization Platform (v1.6)
+- Docker container management
+- Virtual machine orchestration
+- Container networking
+- Resource allocation
+
+### AI Assistant (v1.5)
+- Natural language command processing
+- Predictive maintenance
+- System optimization suggestions
+- Automated task scheduling
+
+### Security Suite (v1.5)
+- Real-time threat detection
+- Advanced firewall management
+- Network monitoring
+- Security policy enforcement
 
 ## Requirements
-- Python 3.8+
-- psutil>=5.9.0
-- schedule>=1.2.0
-- tk>=8.6
+- Python 3.11+
+- Docker Desktop (for virtualization features)
+- See requirements.txt for complete list
 
 ## Installation
 1. Install the required dependencies:
@@ -32,7 +49,12 @@ A powerful operating system implementation in Python with advanced features incl
 pip install -r requirements.txt
 ```
 
-2. Run the OS:
+2. Optional components:
+- Install Docker Desktop for virtualization features
+- Install nmap for security features
+- Install TensorFlow for AI features
+
+3. Run the OS:
 ```bash
 python main.py
 ```
@@ -148,3 +170,16 @@ gui
 - Service management
 - Process monitoring
 - User-friendly interface
+
+## License
+
+UNSC OS is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+### MIT License Summary
+- ✓ Commercial use
+- ✓ Modification
+- ✓ Distribution
+- ✓ Private use
+- ✓ Sublicense
+
+The only requirement is including the original license and copyright notice in any copy of the software/substantial portions of the software.
